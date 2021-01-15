@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "g++ - Build and debug active file",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: g++ build active file",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "test",
+                "testPW"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: test update",
+            "type": "python",
+            "request": "launch",
+            "program": "main/scripts/prepare_update.py",
+            "args": [
+                "81.169.224.239:80",
+                "1234",
+                "0.02.001"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
