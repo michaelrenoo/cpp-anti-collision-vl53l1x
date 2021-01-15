@@ -1,0 +1,6 @@
+[submodule "main/driver"]
+	path = main/driver
+	url = https://github.com/juri117/embedded-driver.git
+[submodule "main/cppDatatypes"]
+	path = main/cppDatatypes
+	url = https://github.com/juri117/cpp-datatypes.git

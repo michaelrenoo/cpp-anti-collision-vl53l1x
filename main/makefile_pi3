@@ -1,0 +1,103 @@
+main: create_files_tructure gitversion.hpp ../build/utils/filters.o ../build/utils/stringUtils.o ../build/utils/converterUtils.o ../build/main.o ../build/interface/VL53L1X.o ../build/interface/MavlinkCom.o ../build/interface/IscMaster.o ../build/interface/FPS.o ../build/interface/BMP280.o ../build/driver/driver_pi/NeoPixel.o ../build/driver/driver_pi/PrefManager.o ../build/driver/driver_pi/utils.o ../build/driver/driver_pi/TcpConnector.o ../build/driver/driver_pi/isc_slave.o ../build/driver/driver_pi/time.o ../build/driver/driver_pi/task.o ../build/driver/driver_pi/spi.o ../build/driver/driver_pi/isc.o ../build/driver/driver_pi/uart.o ../build/driver/driver_pi/log.o ../build/driver/driver_pi/semaphore.o ../build/driver/driver_pi/misc.o ../build/parser/mavlinkParser.o
+	g++ -o ../build/main -I . -g ../build/utils/filters.o ../build/utils/stringUtils.o ../build/utils/converterUtils.o ../build/main.o ../build/interface/VL53L1X.o ../build/interface/MavlinkCom.o ../build/interface/IscMaster.o ../build/interface/FPS.o ../build/interface/BMP280.o ../build/driver/driver_pi/NeoPixel.o ../build/driver/driver_pi/PrefManager.o ../build/driver/driver_pi/utils.o ../build/driver/driver_pi/TcpConnector.o ../build/driver/driver_pi/isc_slave.o ../build/driver/driver_pi/time.o ../build/driver/driver_pi/task.o ../build/driver/driver_pi/spi.o ../build/driver/driver_pi/isc.o ../build/driver/driver_pi/uart.o ../build/driver/driver_pi/log.o ../build/driver/driver_pi/semaphore.o ../build/driver/driver_pi/misc.o ../build/parser/mavlinkParser.o -lpthread -lm -lwiringPi -li2c
+
+create_files_tructure:
+	mkdir -p ../build
+	mkdir -p ../build/cppDatatypes
+	mkdir -p ../build/utils
+	mkdir -p ../build/interface
+	mkdir -p ../build/driver
+	mkdir -p ../build/driver/driver_pi
+	mkdir -p ../build/driver/driver_pi/scripts
+	mkdir -p ../build/driver/libs
+	mkdir -p ../build/scripts
+	mkdir -p ../build/parser
+	mkdir -p ../build/parser/mavlink
+	mkdir -p ../build/parser/mavlink/v2
+	mkdir -p ../build/parser/mavlink/v2/uAvionix
+	mkdir -p ../build/parser/mavlink/v2/ardupilotmega
+	mkdir -p ../build/parser/mavlink/v2/icarous
+	mkdir -p ../build/parser/mavlink/v2/common
+	mkdir -p ../build/parser/mavlink/v1
+	mkdir -p ../build/parser/mavlink/v1/ardupilotmega
+	mkdir -p ../build/parser/mavlink/v1/common
+	mkdir -p ../build/scripts
+	cp driver/driver_pi/scripts/* ../build/scripts
+
+gitversion.hpp:
+	echo "#ifndef GITVERSION_H_\n#define GITVERSION_H_\n#define GIT_HASH 0x$(shell git rev-parse --short HEAD)UL\n#define GIT_BRANCH \"$(shell git rev-parse --abbrev-ref HEAD)\"\n#endif\n" > $@
+
+../build/utils/filters.o: utils/filters.cpp
+	g++ -c -I . -g utils/filters.cpp -o ../build/utils/filters.o
+
+../build/utils/stringUtils.o: utils/stringUtils.cpp
+	g++ -c -I . -g utils/stringUtils.cpp -o ../build/utils/stringUtils.o
+
+../build/utils/converterUtils.o: utils/converterUtils.cpp
+	g++ -c -I . -g utils/converterUtils.cpp -o ../build/utils/converterUtils.o
+
+../build/main.o: main.cpp
+	g++ -c -I . -g main.cpp -o ../build/main.o
+
+../build/interface/VL53L1X.o: interface/VL53L1X.cpp
+	g++ -c -I . -g interface/VL53L1X.cpp -o ../build/interface/VL53L1X.o
+
+../build/interface/MavlinkCom.o: interface/MavlinkCom.cpp
+	g++ -c -I . -g interface/MavlinkCom.cpp -o ../build/interface/MavlinkCom.o
+
+../build/interface/IscMaster.o: interface/IscMaster.cpp
+	g++ -c -I . -g interface/IscMaster.cpp -o ../build/interface/IscMaster.o
+
+../build/interface/FPS.o: interface/FPS.cpp
+	g++ -c -I . -g interface/FPS.cpp -o ../build/interface/FPS.o
+
+../build/interface/BMP280.o: interface/BMP280.cpp
+	g++ -c -I . -g interface/BMP280.cpp -o ../build/interface/BMP280.o
+
+../build/driver/driver_pi/NeoPixel.o: driver/driver_pi/NeoPixel.cpp
+	g++ -c -I . -g driver/driver_pi/NeoPixel.cpp -o ../build/driver/driver_pi/NeoPixel.o
+
+../build/driver/driver_pi/PrefManager.o: driver/driver_pi/PrefManager.cpp
+	g++ -c -I . -g driver/driver_pi/PrefManager.cpp -o ../build/driver/driver_pi/PrefManager.o
+
+../build/driver/driver_pi/utils.o: driver/driver_pi/utils.cpp
+	g++ -c -I . -g driver/driver_pi/utils.cpp -o ../build/driver/driver_pi/utils.o
+
+../build/driver/driver_pi/TcpConnector.o: driver/driver_pi/TcpConnector.cpp
+	g++ -c -I . -g driver/driver_pi/TcpConnector.cpp -o ../build/driver/driver_pi/TcpConnector.o
+
+../build/driver/driver_pi/isc_slave.o: driver/driver_pi/isc_slave.cpp
+	g++ -c -I . -g driver/driver_pi/isc_slave.cpp -o ../build/driver/driver_pi/isc_slave.o
+
+../build/driver/driver_pi/time.o: driver/driver_pi/time.cpp
+	g++ -c -I . -g driver/driver_pi/time.cpp -o ../build/driver/driver_pi/time.o
+
+../build/driver/driver_pi/task.o: driver/driver_pi/task.cpp
+	g++ -c -I . -g driver/driver_pi/task.cpp -o ../build/driver/driver_pi/task.o
+
+../build/driver/driver_pi/spi.o: driver/driver_pi/spi.cpp
+	g++ -c -I . -g driver/driver_pi/spi.cpp -o ../build/driver/driver_pi/spi.o
+
+../build/driver/driver_pi/isc.o: driver/driver_pi/isc.cpp
+	g++ -c -I . -g driver/driver_pi/isc.cpp -o ../build/driver/driver_pi/isc.o
+
+../build/driver/driver_pi/uart.o: driver/driver_pi/uart.cpp
+	g++ -c -I . -g driver/driver_pi/uart.cpp -o ../build/driver/driver_pi/uart.o
+
+../build/driver/driver_pi/log.o: driver/driver_pi/log.cpp
+	g++ -c -I . -g driver/driver_pi/log.cpp -o ../build/driver/driver_pi/log.o
+
+../build/driver/driver_pi/semaphore.o: driver/driver_pi/semaphore.cpp
+	g++ -c -I . -g driver/driver_pi/semaphore.cpp -o ../build/driver/driver_pi/semaphore.o
+
+../build/driver/driver_pi/misc.o: driver/driver_pi/misc.cpp
+	g++ -c -I . -g driver/driver_pi/misc.cpp -o ../build/driver/driver_pi/misc.o
+
+../build/parser/mavlinkParser.o: parser/mavlinkParser.cpp
+	g++ -c -I . -g parser/mavlinkParser.cpp -o ../build/parser/mavlinkParser.o
+
+
+clean:
+	rm -f -r ../build
+	rm -f gitversion.hpp
+	echo Clean done
