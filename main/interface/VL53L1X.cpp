@@ -359,3 +359,5 @@ uint8_t VL53L1X::getRangeStatus() {
 
   return measurementStatus;
 }
+
+void VL53L1X::setAddress(uint8_t newAddress) {}

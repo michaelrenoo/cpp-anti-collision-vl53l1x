@@ -62,6 +62,7 @@ class VL53L1X {
   uint8_t getDistanceMode();
   uint8_t getRangeStatus();  // Returns the results from the last measurement,
                              // 0 = valid
+  void setAddress(uint8_t newAddress);  // Set new I2C address to the sensor
 
  private:
   IscMaster *iscm;  // i2c master
