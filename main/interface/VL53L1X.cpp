@@ -20,9 +20,25 @@ static void i2c_vl53l1x_read_task() {
     while (vl53.newDataReady() == false) {
       task_delay_ms(10);
     }
+    log_i(TAG, "old address: %d", vl53.getAddress());
+    log_i(TAG, "dist: %d", vl53.getDistance());
+    task_delay_ms(200);
+    vl53.setAddress(vl53.getAddress() / 2);
+    task_delay_ms(200);
+    log_i(TAG, "new address: %d", vl53.getAddress());
+    task_delay_ms(2000);
+    vl53.softReset();
+    log_i(TAG, "dist: %d", vl53.getDistance());
+    task_delay_ms(2000);
+    break;
+  }
+
+  while (1) {
+    log_i(TAG, "new address: %d", vl53.getAdress());
     log_i(TAG, "dist: %d", vl53.getDistance());
     task_delay_ms(200);
   }
+
   end_task();
 }
 
@@ -57,7 +73,10 @@ uint8_t configBlock[] = {
 // Set sensor up for 2.8/3.3V I2C
 // Return true if succesful
 bool VL53L1X::init(IscMaster *iscm) {
-  this->deviceAddress = 0x29;
+  if (this->deviceAddress == NULL) {
+    this->deviceAddress = defaultAddress_VL53L1X;
+  }
+  // this->deviceAddress = 0x29;
   this->iscm = iscm;
 
   // Check the device ID
@@ -360,4 +379,8 @@ uint8_t VL53L1X::getRangeStatus() {
   return measurementStatus;
 }
 
-void VL53L1X::setAddress(uint8_t newAddress) {}
+void VL53L1X::setAddress(uint8_t newAddress) {
+  this->iscm->write_register16(deviceAddress, VL53L1_I2C_SLAVE__DEVICE_ADDRESS,
+                               &newAddress, 1);
+  deviceAddress = newAddress;
+}
