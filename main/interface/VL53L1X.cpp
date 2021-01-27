@@ -34,7 +34,7 @@ static void i2c_vl53l1x_read_task() {
   }
 
   while (1) {
-    log_i(TAG, "new address: %d", vl53.getAdress());
+    log_i(TAG, "new address: %d", vl53.getAddress());
     log_i(TAG, "dist: %d", vl53.getDistance());
     task_delay_ms(200);
   }
