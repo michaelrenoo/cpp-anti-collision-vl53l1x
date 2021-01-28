@@ -209,27 +209,43 @@ int main() {
       case 0:
         set_gpio_out(XSHUT1, false);
         set_gpio_out(XSHUT1, true);
+        task_delay_ms(200);
         vl53.init(&iscm);
         log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
         vl53.setAddress(newAddress);
+        log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
+        // vl53.softReset();
+        break;
       case 1:
         set_gpio_out(XSHUT2, false);
-        set_gpio_out(XSHUT1, true);
+        set_gpio_out(XSHUT2, true);
+        task_delay_ms(200);
         vl53l1.init(&iscm);
         log_i(TAG, "VL53L1X 2 Address: ", vl53l1.getAddress());
         vl53l1.setAddress(newAddress);
+        log_i(TAG, "VL53L1X 1 Address: ", vl53l1.getAddress());
+        // vl53l1.softReset();
+        break;
       case 2:
         set_gpio_out(XSHUT3, false);
-        set_gpio_out(XSHUT1, true);
+        set_gpio_out(XSHUT3, true);
+        task_delay_ms(200);
         vl53l2.init(&iscm);
         log_i(TAG, "VL53L1X 3 Address: ", vl53l2.getAddress());
         vl53l2.setAddress(newAddress);
+        log_i(TAG, "VL53L1X 1 Address: ", vl53l2.getAddress());
+        // vl53l2.softReset();
+        break;
       case 3:
         set_gpio_out(XSHUT4, false);
-        set_gpio_out(XSHUT1, true);
+        set_gpio_out(XSHUT4, true);
+        task_delay_ms(200);
         vl53l3.init(&iscm);
         log_i(TAG, "VL53L1X 4 Address: ", vl53l3.getAddress());
         vl53l3.setAddress(newAddress);
+        log_i(TAG, "VL53L1X 1 Address: ", vl53l3.getAddress());
+        // vl53l3.softReset();
+        break;
     }
   }
 
