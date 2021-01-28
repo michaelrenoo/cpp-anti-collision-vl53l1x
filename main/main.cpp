@@ -103,11 +103,22 @@ static void i2c_vl53l1x_read_task() {
 
   while (1) {
     vl53.startMeasurement();
-    while (vl53.newDataReady() == false) {
+    vl53l1.startMeasurement();
+    vl53l2.startMeasurement();
+    vl53l3.startMeasurement();
+    while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
+           vl53l2.newDataReady() == false && vl53l3.newDataReady() == false) {
       task_delay_ms(10);
     }
-    log_i(TAG, "Address: %d", vl53.getAddress());
-    log_i(TAG, "Dist: %d", vl53.getDistance());
+    log_i(TAG, "Address Sensor 1: %d", vl53.getAddress());
+    log_i(TAG, "Address Sensor 2: %d", vl53l1.getAddress());
+    log_i(TAG, "Address Sensor 3: %d", vl53l2.getAddress());
+    log_i(TAG, "Address Sensor 4: %d", vl53l3.getAddress());
+
+    log_i(TAG, "Dist Sensor 1: %d", vl53.getDistance());
+    log_i(TAG, "Dist Sensor 2: %d", vl53l1.getDistance());
+    log_i(TAG, "Dist Sensor 3: %d", vl53l2.getDistance());
+    log_i(TAG, "Dist Sensor 4: %d", vl53l3.getDistance());
     task_delay_ms(200);
   }
 
@@ -197,21 +208,25 @@ int main() {
     switch (ToF) {
       case 0:
         set_gpio_out(XSHUT1, false);
+        set_gpio_out(XSHUT1, true);
         vl53.init(&iscm);
         log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
         vl53.setAddress(newAddress);
       case 1:
         set_gpio_out(XSHUT2, false);
+        set_gpio_out(XSHUT1, true);
         vl53l1.init(&iscm);
         log_i(TAG, "VL53L1X 2 Address: ", vl53l1.getAddress());
         vl53l1.setAddress(newAddress);
       case 2:
         set_gpio_out(XSHUT3, false);
+        set_gpio_out(XSHUT1, true);
         vl53l2.init(&iscm);
         log_i(TAG, "VL53L1X 3 Address: ", vl53l2.getAddress());
         vl53l2.setAddress(newAddress);
       case 3:
         set_gpio_out(XSHUT4, false);
+        set_gpio_out(XSHUT1, true);
         vl53l3.init(&iscm);
         log_i(TAG, "VL53L1X 4 Address: ", vl53l3.getAddress());
         vl53l3.setAddress(newAddress);
@@ -230,7 +245,7 @@ int main() {
 
   // start dist send task
   start_task(dist_task, "dist_task", 8 * 1024, 1);
-  // start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
+  start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
 
   //********************************
   //* complete boot up             *
