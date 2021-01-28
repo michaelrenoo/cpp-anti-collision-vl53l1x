@@ -75,6 +75,41 @@ static void dist_task() {
 }
 
 #if BUILD_TARGET == TARGET_ESP32
+static void i2c_vl53l1x_read_task(void *pvParameters) {
+#else
+static void i2c_vl53l1x_read_task() {
+#endif
+  log_i(TAG, "start task");
+  task_delay_ms(1000);
+
+  while (1) {
+    vl53.startMeasurement();
+    while (vl53.newDataReady() == false) {
+      task_delay_ms(10);
+    }
+    log_i(TAG, "old address: %d", vl53.getAddress());
+    log_i(TAG, "dist: %d", vl53.getDistance());
+    task_delay_ms(200);
+    vl53.setAddress(vl53.getAddress() / 2);
+    task_delay_ms(200);
+    log_i(TAG, "new address: %d", vl53.getAddress());
+    task_delay_ms(2000);
+    vl53.softReset();
+    log_i(TAG, "dist: %d", vl53.getDistance());
+    task_delay_ms(2000);
+    break;
+  }
+
+  while (1) {
+    log_i(TAG, "new address: %d", vl53.getAddress());
+    log_i(TAG, "dist: %d", vl53.getDistance());
+    task_delay_ms(200);
+  }
+
+  end_task();
+}
+
+#if BUILD_TARGET == TARGET_ESP32
 void app_main(void) {
 #else
 int main() {
@@ -190,6 +225,7 @@ int main() {
 
   // start dist send task
   start_task(dist_task, "dist_task", 8 * 1024, 1);
+  start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
 
   //********************************
   //* complete boot up             *
