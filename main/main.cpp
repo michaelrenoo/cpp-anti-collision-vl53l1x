@@ -79,30 +79,35 @@ static void i2c_vl53l1x_read_task(void *pvParameters) {
 #else
 static void i2c_vl53l1x_read_task() {
 #endif
+  static const char *TAG = "Sensor Task";
   log_i(TAG, "start task");
   task_delay_ms(1000);
+
+  // while (1) {
+  //   vl53.startMeasurement();
+  //   while (vl53.newDataReady() == false) {
+  //     task_delay_ms(10);
+  //   }
+  //   log_i(TAG, "old address: %d", vl53.getAddress());
+  //   log_i(TAG, "dist: %d", vl53.getDistance());
+  //   task_delay_ms(200);
+  //   vl53.setAddress(vl53.getAddress() / 2);
+  //   task_delay_ms(200);
+  //   log_i(TAG, "new address: %d", vl53.getAddress());
+  //   task_delay_ms(2000);
+  //   vl53.softReset();
+  //   log_i(TAG, "dist: %d", vl53.getDistance());
+  //   task_delay_ms(2000);
+  //   break;
+  // }
 
   while (1) {
     vl53.startMeasurement();
     while (vl53.newDataReady() == false) {
       task_delay_ms(10);
     }
-    log_i(TAG, "old address: %d", vl53.getAddress());
-    log_i(TAG, "dist: %d", vl53.getDistance());
-    task_delay_ms(200);
-    vl53.setAddress(vl53.getAddress() / 2);
-    task_delay_ms(200);
-    log_i(TAG, "new address: %d", vl53.getAddress());
-    task_delay_ms(2000);
-    vl53.softReset();
-    log_i(TAG, "dist: %d", vl53.getDistance());
-    task_delay_ms(2000);
-    break;
-  }
-
-  while (1) {
-    log_i(TAG, "new address: %d", vl53.getAddress());
-    log_i(TAG, "dist: %d", vl53.getDistance());
+    log_i(TAG, "Address: %d", vl53.getAddress());
+    log_i(TAG, "Dist: %d", vl53.getDistance());
     task_delay_ms(200);
   }
 
@@ -191,22 +196,22 @@ int main() {
     uint8_t newAddress = 20 + ToF;
     switch (ToF) {
       case 0:
-        set_gpio_out(XSHUT1, true);
+        set_gpio_out(XSHUT1, false);
         vl53.init(&iscm);
         log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
         vl53.setAddress(newAddress);
       case 1:
-        set_gpio_out(XSHUT2, true);
+        set_gpio_out(XSHUT2, false);
         vl53l1.init(&iscm);
         log_i(TAG, "VL53L1X 2 Address: ", vl53l1.getAddress());
         vl53l1.setAddress(newAddress);
       case 2:
-        set_gpio_out(XSHUT3, true);
+        set_gpio_out(XSHUT3, false);
         vl53l2.init(&iscm);
         log_i(TAG, "VL53L1X 3 Address: ", vl53l2.getAddress());
         vl53l2.setAddress(newAddress);
       case 3:
-        set_gpio_out(XSHUT4, true);
+        set_gpio_out(XSHUT4, false);
         vl53l3.init(&iscm);
         log_i(TAG, "VL53L1X 4 Address: ", vl53l3.getAddress());
         vl53l3.setAddress(newAddress);
@@ -225,7 +230,7 @@ int main() {
 
   // start dist send task
   start_task(dist_task, "dist_task", 8 * 1024, 1);
-  start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
+  // start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
 
   //********************************
   //* complete boot up             *
@@ -246,6 +251,7 @@ int main() {
         task_delay_ms(100);
       }
       uint16_t dist = vl53.getDistance();
+      start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
       log_i(TAG, "test, %d", dist);
     }
     task_delay_ms(200);
