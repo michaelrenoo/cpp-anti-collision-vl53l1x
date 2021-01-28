@@ -29,6 +29,9 @@ IscMaster iscm;
 MavlinkCom mav;
 FPS fps;
 VL53L1X vl53;
+VL53L1X vl53l1;
+VL53L1X vl53l2;
+VL53L1X vl53l3;
 BMP280 bme280;
 
 uint8_t printBuff[256];
@@ -101,6 +104,24 @@ int main() {
   set_gpio_out(LED2_GPIO, false);
 #endif
 
+// Set all XSHUT as high
+#if XSHUT1 >= 0
+  init_gpio_out(XSHUT1);
+  set_gpio_out(XSHUT1, true);
+#endif
+#if XSHUT2 >= 0
+  init_gpio_out(XSHUT2);
+  set_gpio_out(XSHUT2, true);
+#endif
+#if XSHUT3 >= 0
+  init_gpio_out(XSHUT3);
+  set_gpio_out(XSHUT3, true);
+#endif
+#if XSHUT4 >= 0
+  init_gpio_out(XSHUT4);
+  set_gpio_out(XSHUT4, true);
+#endif
+
   set_led(true);
   init_onboard_button();
 
@@ -131,7 +152,32 @@ int main() {
   iscm.init(I2C_NUM_1);
   task_delay_ms(2000);
 
-  vl53.init(&iscm);
+  for (int ToF = 0; ToF < 3; ToF++) {
+    uint8_t newAddress = 20 + ToF;
+    switch (ToF) {
+      case 0:
+        set_gpio_out(XSHUT1, true);
+        vl53.init(&iscm);
+        log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
+        vl53.setAddress(newAddress);
+      case 1:
+        set_gpio_out(XSHUT2, true);
+        vl53l1.init(&iscm);
+        log_i(TAG, "VL53L1X 2 Address: ", vl53l1.getAddress());
+        vl53l1.setAddress(newAddress);
+      case 2:
+        set_gpio_out(XSHUT3, true);
+        vl53l2.init(&iscm);
+        log_i(TAG, "VL53L1X 3 Address: ", vl53l2.getAddress());
+        vl53l2.setAddress(newAddress);
+      case 3:
+        set_gpio_out(XSHUT4, true);
+        vl53l3.init(&iscm);
+        log_i(TAG, "VL53L1X 4 Address: ", vl53l3.getAddress());
+        vl53l3.setAddress(newAddress);
+    }
+  }
+
   // bme280.init(&iscm);
 
   //********************************

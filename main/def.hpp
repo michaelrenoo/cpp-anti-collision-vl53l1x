@@ -193,6 +193,14 @@
  * peripheral
  */
 #define LED2_GPIO 25
+#define XSHUT1 \
+  22  // XSHUT for sensor 1 (vl53 - forward to USB in Pi) = WPi GPIO 22
+#define XSHUT2 \
+  21  // XSHUT for sensor 2 (vl53l1 - forward to HDMI in Pi) = WPi GPIO 21
+#define XSHUT3 \
+  0  // XSHUT for sensor 3 (vl53l2 - backward from USB in Pi) = WPi GPIO 0
+#define XSHUT4 \
+  6  // XSHUT for sensor 4 (vl53l3 - backward from HDMI in Pi) = WPi GPIO 6
 // #define LED_GPIO 24
 // #define BUTTON_GPIO 23
 
