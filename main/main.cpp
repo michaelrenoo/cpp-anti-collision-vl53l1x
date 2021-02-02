@@ -203,7 +203,7 @@ int main() {
   iscm.init(I2C_NUM_1);
   task_delay_ms(2000);
 
-  for (int ToF = 0; ToF < 3; ToF++) {
+  for (int ToF = 0; ToF <= 3; ToF++) {
     uint8_t newAddress = 20 + ToF;
     switch (ToF) {
       case 0:
@@ -211,9 +211,9 @@ int main() {
         set_gpio_out(XSHUT1, true);
         task_delay_ms(200);
         vl53.init(&iscm);
-        log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
+        log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
         vl53.setAddress(newAddress);
-        log_i(TAG, "VL53L1X 1 Address: ", vl53.getAddress());
+        log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
         // vl53.softReset();
         break;
       case 1:
@@ -221,9 +221,9 @@ int main() {
         set_gpio_out(XSHUT2, true);
         task_delay_ms(200);
         vl53l1.init(&iscm);
-        log_i(TAG, "VL53L1X 2 Address: ", vl53l1.getAddress());
+        log_i(TAG, "VL53L1X 2 Address: %u", vl53l1.getAddress());
         vl53l1.setAddress(newAddress);
-        log_i(TAG, "VL53L1X 1 Address: ", vl53l1.getAddress());
+        log_i(TAG, "VL53L1X 2 Address: %u", vl53l1.getAddress());
         // vl53l1.softReset();
         break;
       case 2:
@@ -231,9 +231,9 @@ int main() {
         set_gpio_out(XSHUT3, true);
         task_delay_ms(200);
         vl53l2.init(&iscm);
-        log_i(TAG, "VL53L1X 3 Address: ", vl53l2.getAddress());
+        log_i(TAG, "VL53L1X 3 Address: %u", vl53l2.getAddress());
         vl53l2.setAddress(newAddress);
-        log_i(TAG, "VL53L1X 1 Address: ", vl53l2.getAddress());
+        log_i(TAG, "VL53L1X 3 Address: %u", vl53l2.getAddress());
         // vl53l2.softReset();
         break;
       case 3:
@@ -241,9 +241,9 @@ int main() {
         set_gpio_out(XSHUT4, true);
         task_delay_ms(200);
         vl53l3.init(&iscm);
-        log_i(TAG, "VL53L1X 4 Address: ", vl53l3.getAddress());
+        log_i(TAG, "VL53L1X 4 Address: %u", vl53l3.getAddress());
         vl53l3.setAddress(newAddress);
-        log_i(TAG, "VL53L1X 1 Address: ", vl53l3.getAddress());
+        log_i(TAG, "VL53L1X 4 Address: %u", vl53l3.getAddress());
         // vl53l3.softReset();
         break;
     }
@@ -259,9 +259,10 @@ int main() {
     mav.init();
   }
 
+  // start vl53l1x read task
+  start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
   // start dist send task
   start_task(dist_task, "dist_task", 8 * 1024, 1);
-  start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
 
   //********************************
   //* complete boot up             *
