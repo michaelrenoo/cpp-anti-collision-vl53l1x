@@ -50,7 +50,7 @@ class VL53L1X {
  public:
   bool init(IscMaster *iscm);
   void softReset();  // Reset the sensor via software
-  void startMeasurement(
+  void startMeasurement(uint8_t newAddress,
       uint8_t offset = 0);   // Write a block of bytes to the sensor to
                              // configure it to take a measurement
   bool newDataReady();       // Polls the measurement completion bit

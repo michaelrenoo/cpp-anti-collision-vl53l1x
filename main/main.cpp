@@ -105,17 +105,21 @@ static void i2c_vl53l1x_read_task() {
   log_i(TAG, "Address Sensor 2: %d", vl53l1.getAddress());
   log_i(TAG, "Address Sensor 3: %d", vl53l2.getAddress());
   log_i(TAG, "Address Sensor 4: %d", vl53l3.getAddress());
-  vl53.softReset();
-  vl53l1.softReset();
-  vl53l2.softReset();
-  vl53l3.softReset();
+  // vl53.softReset();
+  // vl53l1.softReset();
+  // vl53l2.softReset();
+  // vl53l3.softReset();
+
+  // vl53.startMeasurement(vl53.getAddress());
+  // vl53l1.startMeasurement();
+  // vl53l2.startMeasurement();
+  // vl53l3.startMeasurement();
+
   while (1) {
-    vl53.startMeasurement();
-    vl53l1.startMeasurement();
-    vl53l2.startMeasurement();
-    vl53l3.startMeasurement();
-    while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
-           vl53l2.newDataReady() == false && vl53l3.newDataReady() == false) {
+    // while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
+    //        vl53l2.newDataReady() == false && vl53l3.newDataReady() == false)
+    //        {
+    while (vl53.newDataReady() == false) {
       task_delay_ms(10);
     }
 
@@ -162,19 +166,19 @@ int main() {
 // Set all XSHUT as high
 #if XSHUT1 >= 0
   init_gpio_out(XSHUT1);
-  set_gpio_out(XSHUT1, true);
+  set_gpio_out(XSHUT1, false);
 #endif
 #if XSHUT2 >= 0
   init_gpio_out(XSHUT2);
-  set_gpio_out(XSHUT2, true);
+  set_gpio_out(XSHUT2, false);
 #endif
 #if XSHUT3 >= 0
   init_gpio_out(XSHUT3);
-  set_gpio_out(XSHUT3, true);
+  set_gpio_out(XSHUT3, false);
 #endif
 #if XSHUT4 >= 0
   init_gpio_out(XSHUT4);
-  set_gpio_out(XSHUT4, true);
+  set_gpio_out(XSHUT4, false);
 #endif
 
   set_led(true);
@@ -208,45 +212,53 @@ int main() {
   task_delay_ms(2000);
 
   for (int ToF = 0; ToF <= 3; ToF++) {
-    uint8_t newAddress = 20 + ToF;
+    uint8_t newAddress = 21 + ToF;
     switch (ToF) {
       case 0:
-        set_gpio_out(XSHUT1, false);
+        // set_gpio_out(XSHUT1, false);
         set_gpio_out(XSHUT1, true);
         task_delay_ms(200);
         vl53.init(&iscm);
         log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
         vl53.setAddress(newAddress);
+        vl53.softReset();
+        vl53.startMeasurement(newAddress);
         log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
         // vl53.softReset();
         break;
       case 1:
-        set_gpio_out(XSHUT2, false);
+        // set_gpio_out(XSHUT2, false);
         set_gpio_out(XSHUT2, true);
         task_delay_ms(200);
         vl53l1.init(&iscm);
         log_i(TAG, "VL53L1X 2 Address: %u", vl53l1.getAddress());
         vl53l1.setAddress(newAddress);
+        vl53l1.softReset();
+        vl53l1.startMeasurement(newAddress);
         log_i(TAG, "VL53L1X 2 Address: %u", vl53l1.getAddress());
         // vl53l1.softReset();
         break;
       case 2:
-        set_gpio_out(XSHUT3, false);
+        // set_gpio_out(XSHUT3, false);
         set_gpio_out(XSHUT3, true);
         task_delay_ms(200);
         vl53l2.init(&iscm);
         log_i(TAG, "VL53L1X 3 Address: %u", vl53l2.getAddress());
         vl53l2.setAddress(newAddress);
+        vl53l2.softReset();
+        vl53l2.startMeasurement(newAddress);
         log_i(TAG, "VL53L1X 3 Address: %u", vl53l2.getAddress());
         // vl53l2.softReset();
         break;
       case 3:
-        set_gpio_out(XSHUT4, false);
+        // set_gpio_out(XSHUT4, false);
         set_gpio_out(XSHUT4, true);
         task_delay_ms(200);
         vl53l3.init(&iscm);
         log_i(TAG, "VL53L1X 4 Address: %u", vl53l3.getAddress());
         vl53l3.setAddress(newAddress);
+        vl53l3.softReset();
+        vl53l3.startMeasurement(newAddress);
         log_i(TAG, "VL53L1X 4 Address: %u", vl53l3.getAddress());
         // vl53l3.softReset();
         break;
@@ -287,7 +299,7 @@ int main() {
         task_delay_ms(100);
       }
       uint16_t dist = vl53.getDistance();
-      start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
+      // start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
       log_i(TAG, "test, %d", dist);
     }
     task_delay_ms(200);

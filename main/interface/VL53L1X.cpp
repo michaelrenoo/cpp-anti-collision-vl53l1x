@@ -105,7 +105,7 @@ bool VL53L1X::init(IscMaster *iscm) {
 // This is the main function that setups up the VL53L1X to take measurements
 // This was obtained by inspecting the example software from ST and by
 // capturing I2C trace on ST Nucleo demo board
-void VL53L1X::startMeasurement(uint8_t offset) {
+void VL53L1X::startMeasurement(uint8_t newAddress, uint8_t offset) {
   unsigned int result;
   uint8_t address = 1 + offset;  // Start at memory location 0x01, add offset
   int length = 137;
@@ -115,6 +115,8 @@ void VL53L1X::startMeasurement(uint8_t offset) {
   for (int x = 2; x < 135; x++) {
     buffer[x] = configBlock[x - 2];
   }
+  buffer[2] = newAddress;
+  deviceAddress = newAddress;
   buffer[135] = 0x01;
   buffer[136] = 0x40;
   for (uint8_t x = 0; x < 137; x++) {
