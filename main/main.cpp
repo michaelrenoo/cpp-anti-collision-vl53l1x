@@ -28,7 +28,7 @@ IscMaster iscm;
 
 MavlinkCom mav;
 FPS fps;
-VL53L1X vl53;
+VL53L1X vl53l0;
 VL53L1X vl53l1;
 VL53L1X vl53l2;
 VL53L1X vl53l3;
@@ -84,44 +84,44 @@ static void i2c_vl53l1x_read_task() {
   task_delay_ms(1000);
 
   // while (1) {
-  //   vl53.startMeasurement();
-  //   while (vl53.newDataReady() == false) {
+  //   vl53l0.startMeasurement();
+  //   while (vl53l0.newDataReady() == false) {
   //     task_delay_ms(10);
   //   }
-  //   log_i(TAG, "old address: %d", vl53.getAddress());
-  //   log_i(TAG, "dist: %d", vl53.getDistance());
+  //   log_i(TAG, "old address: %d", vl53l0.getAddress());
+  //   log_i(TAG, "dist: %d", vl53l0.getDistance());
   //   task_delay_ms(200);
-  //   vl53.setAddress(vl53.getAddress() / 2);
+  //   vl53l0.setAddress(vl53l0.getAddress() / 2);
   //   task_delay_ms(200);
-  //   log_i(TAG, "new address: %d", vl53.getAddress());
+  //   log_i(TAG, "new address: %d", vl53l0.getAddress());
   //   task_delay_ms(2000);
-  //   vl53.softReset();
-  //   log_i(TAG, "dist: %d", vl53.getDistance());
+  //   vl53l0.softReset();
+  //   log_i(TAG, "dist: %d", vl53l0.getDistance());
   //   task_delay_ms(2000);
   //   break;
   // }
 
-  log_i(TAG, "Address Sensor 1: %d", vl53.getAddress());
+  log_i(TAG, "Address Sensor 1: %d", vl53l0.getAddress());
   log_i(TAG, "Address Sensor 2: %d", vl53l1.getAddress());
   log_i(TAG, "Address Sensor 3: %d", vl53l2.getAddress());
   log_i(TAG, "Address Sensor 4: %d", vl53l3.getAddress());
-  // vl53.softReset();
+  // vl53l0.softReset();
   // vl53l1.softReset();
   // vl53l2.softReset();
   // vl53l3.softReset();
 
-  // vl53.startMeasurement(vl53.getAddress());
+  // vl53l0.startMeasurement(vl53l0.getAddress());
   // vl53l1.startMeasurement();
   // vl53l2.startMeasurement();
   // vl53l3.startMeasurement();
 
   while (1) {
-    while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
+    while (vl53l0.newDataReady() == false && vl53l1.newDataReady() == false &&
            vl53l2.newDataReady() == false && vl53l3.newDataReady() == false) {
       task_delay_ms(10);
     }
 
-    log_i(TAG, "Dist Sensor 1: %d", vl53.getDistance());
+    log_i(TAG, "Dist Sensor 1: %d", vl53l0.getDistance());
     log_i(TAG, "Dist Sensor 2: %d", vl53l1.getDistance());
     log_i(TAG, "Dist Sensor 3: %d", vl53l2.getDistance());
     log_i(TAG, "Dist Sensor 4: %d", vl53l3.getDistance());
@@ -162,7 +162,11 @@ int main() {
   set_gpio_out(LED2_GPIO, false);
 #endif
 
-// Set all XSHUT as high
+// Set all XSHUT as low
+#if XSHUT0 >= 0
+  init_gpio_out(XSHUT0);
+  set_gpio_out(XSHUT0, false);
+#endif
 #if XSHUT1 >= 0
   init_gpio_out(XSHUT1);
   set_gpio_out(XSHUT1, false);
@@ -174,10 +178,6 @@ int main() {
 #if XSHUT3 >= 0
   init_gpio_out(XSHUT3);
   set_gpio_out(XSHUT3, false);
-#endif
-#if XSHUT4 >= 0
-  init_gpio_out(XSHUT4);
-  set_gpio_out(XSHUT4, false);
 #endif
 
   set_led(true);
@@ -214,20 +214,20 @@ int main() {
     uint8_t newAddress = 21 + ToF;
     switch (ToF) {
       case 0:
-        // set_gpio_out(XSHUT1, false);
-        set_gpio_out(XSHUT1, true);
+        // set_gpio_out(XSHUT0, false);
+        set_gpio_out(XSHUT0, true);
         task_delay_ms(200);
-        vl53.init(&iscm);
-        log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
-        vl53.setAddress(newAddress);
-        vl53.softReset();
-        vl53.startMeasurement(newAddress);
-        log_i(TAG, "VL53L1X 1 Address: %u", vl53.getAddress());
-        // vl53.softReset();
+        vl53l0.init(&iscm);
+        log_i(TAG, "VL53L1X 1 Address: %u", vl53l0.getAddress());
+        vl53l0.setAddress(newAddress);
+        vl53l0.softReset();
+        vl53l0.startMeasurement(newAddress);
+        log_i(TAG, "VL53L1X 1 Address: %u", vl53l0.getAddress());
+        // vl53l0.softReset();
         break;
       case 1:
-        // set_gpio_out(XSHUT2, false);
-        set_gpio_out(XSHUT2, true);
+        // set_gpio_out(XSHUT1, false);
+        set_gpio_out(XSHUT1, true);
         task_delay_ms(200);
         vl53l1.init(&iscm);
         log_i(TAG, "VL53L1X 2 Address: %u", vl53l1.getAddress());
@@ -238,8 +238,8 @@ int main() {
         // vl53l1.softReset();
         break;
       case 2:
-        // set_gpio_out(XSHUT3, false);
-        set_gpio_out(XSHUT3, true);
+        // set_gpio_out(XSHUT2, false);
+        set_gpio_out(XSHUT2, true);
         task_delay_ms(200);
         vl53l2.init(&iscm);
         log_i(TAG, "VL53L1X 3 Address: %u", vl53l2.getAddress());
@@ -250,8 +250,8 @@ int main() {
         // vl53l2.softReset();
         break;
       case 3:
-        // set_gpio_out(XSHUT4, false);
-        set_gpio_out(XSHUT4, true);
+        // set_gpio_out(XSHUT3, false);
+        set_gpio_out(XSHUT3, true);
         task_delay_ms(200);
         vl53l3.init(&iscm);
         log_i(TAG, "VL53L1X 4 Address: %u", vl53l3.getAddress());
@@ -297,7 +297,7 @@ int main() {
       while (button_is_pressed()) {
         task_delay_ms(100);
       }
-      uint16_t dist = vl53.getDistance();
+      uint16_t dist = vl53l0.getDistance();
       // start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
       log_i(TAG, "test, %d", dist);
     }

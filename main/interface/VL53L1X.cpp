@@ -5,7 +5,7 @@
 static const char *TAG = "VL53L1X";
 
 extern IscMaster iscm;
-extern VL53L1X vl53;
+extern VL53L1X vl53l0;
 
 // This is 135 bytes to be written every time to the VL53L1X to initiate a
 // measurement 0x29 is written to memory location 0x01, which is the register
