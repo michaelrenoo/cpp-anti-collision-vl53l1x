@@ -116,10 +116,8 @@ static void i2c_vl53l1x_read_task() {
   // vl53l3.startMeasurement();
 
   while (1) {
-    // while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
-    //        vl53l2.newDataReady() == false && vl53l3.newDataReady() == false)
-    //        {
-    while (vl53.newDataReady() == false) {
+    while (vl53.newDataReady() == false && vl53l1.newDataReady() == false &&
+           vl53l2.newDataReady() == false && vl53l3.newDataReady() == false) {
       task_delay_ms(10);
     }
 
@@ -127,7 +125,8 @@ static void i2c_vl53l1x_read_task() {
     log_i(TAG, "Dist Sensor 2: %d", vl53l1.getDistance());
     log_i(TAG, "Dist Sensor 3: %d", vl53l2.getDistance());
     log_i(TAG, "Dist Sensor 4: %d", vl53l3.getDistance());
-    task_delay_ms(1000);
+    log_i(TAG, "---------------------------------------");
+    task_delay_ms(200);
   }
 
   end_task();
