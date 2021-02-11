@@ -66,8 +66,10 @@ int mav_generate_distance_sensor(uint8_t* str, uint16_t max_len, uint8_t id,
   uint16_t len = mavlink_msg_distance_sensor_pack(
       SYSTEM_ID, COMP_ID, &msg, get_time_system_ms(),
       0,    // min dist
-      500,  // max dist
-      dist_cm, MAV_DISTANCE_SENSOR_LASER, id, orientation, 255, 0, 0, q);
+      400,  // max dist
+      dist_cm, MAV_DISTANCE_SENSOR_LASER, id, orientation, 255,
+      0.471239,  // Horizontal FOV in rad. 27 deg = 0.471239 rad
+      0, q);
   len = mavlink_msg_to_send_buffer(str, &msg);
   return len;
 }
