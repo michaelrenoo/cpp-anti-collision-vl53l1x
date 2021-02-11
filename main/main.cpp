@@ -64,11 +64,32 @@ static void dist_task() {
 #endif
   DelayUntil delay = DelayUntil();
   while (1) {
-    uint8_t mavBuff[MAV_OUT_MAX_LEN];
-    int msgLen = 0;
-    msgLen = mav_generate_distance_sensor(mavBuff, MAV_OUT_MAX_LEN, 1,
-                                          MAV_SENSOR_ROTATION_YAW_90, 42);
-    fps.send_bytes(mavBuff, msgLen);
+    uint8_t mavBuff0[MAV_OUT_MAX_LEN];
+    uint8_t mavBuff1[MAV_OUT_MAX_LEN];
+    uint8_t mavBuff2[MAV_OUT_MAX_LEN];
+    uint8_t mavBuff3[MAV_OUT_MAX_LEN];
+    int msgLen0 = 0;
+    int msgLen1 = 0;
+    int msgLen2 = 0;
+    int msgLen3 = 0;
+
+    msgLen0 = mav_generate_distance_sensor(
+        mavBuff0, MAV_OUT_MAX_LEN, 1, MAV_SENSOR_ROTATION_NONE,  // 1st sensor - towards USB in Pi
+        vl53l0.getDistance());
+    msgLen1 = mav_generate_distance_sensor(
+        mavBuff1, MAV_OUT_MAX_LEN, 2, MAV_SENSOR_ROTATION_YAW_270,  // 2nd sensor - towards power connector in Pi
+        vl53l1.getDistance());
+    msgLen2 = mav_generate_distance_sensor(
+        mavBuff2, MAV_OUT_MAX_LEN, 3, MAV_SENSOR_ROTATION_PITCH_180,  // 3rd sensor - backwards from USB in Pi
+        vl53l2.getDistance());
+    msgLen3 = mav_generate_distance_sensor(
+        mavBuff3, MAV_OUT_MAX_LEN, 4, MAV_SENSOR_ROTATION_YAW_90,  // 4th sensor - backwards from power connector in Pi
+        vl53l3.getDistance());
+
+    fps.send_bytes(mavBuff0, msgLen0);
+    fps.send_bytes(mavBuff1, msgLen1);
+    fps.send_bytes(mavBuff2, msgLen2);
+    fps.send_bytes(mavBuff3, msgLen3);
     delay.wait_for(200);
   }
   end_task();
@@ -121,6 +142,8 @@ static void i2c_vl53l1x_read_task() {
       task_delay_ms(10);
     }
 
+    // TODO: Add counter to count how many times per second the distance is
+    // measured. and log it with another task. -> count is then a global var
     log_i(TAG, "Dist Sensor 1: %d", vl53l0.getDistance());
     log_i(TAG, "Dist Sensor 2: %d", vl53l1.getDistance());
     log_i(TAG, "Dist Sensor 3: %d", vl53l2.getDistance());
