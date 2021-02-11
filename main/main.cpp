@@ -75,16 +75,16 @@ static void dist_task() {
 
     msgLen0 = mav_generate_distance_sensor(
         mavBuff0, MAV_OUT_MAX_LEN, 1, MAV_SENSOR_ROTATION_NONE,  // 1st sensor - towards USB in Pi
-        vl53l0.getDistance());
+        (vl53l0.getDistance() / 10));
     msgLen1 = mav_generate_distance_sensor(
         mavBuff1, MAV_OUT_MAX_LEN, 2, MAV_SENSOR_ROTATION_YAW_270,  // 2nd sensor - towards power connector in Pi
-        vl53l1.getDistance());
+        (vl53l1.getDistance() / 10));
     msgLen2 = mav_generate_distance_sensor(
         mavBuff2, MAV_OUT_MAX_LEN, 3, MAV_SENSOR_ROTATION_PITCH_180,  // 3rd sensor - backwards from USB in Pi
-        vl53l2.getDistance());
+        (vl53l2.getDistance() / 10));
     msgLen3 = mav_generate_distance_sensor(
         mavBuff3, MAV_OUT_MAX_LEN, 4, MAV_SENSOR_ROTATION_YAW_90,  // 4th sensor - backwards from power connector in Pi
-        vl53l3.getDistance());
+        (vl53l3.getDistance() / 10));
 
     fps.send_bytes(mavBuff0, msgLen0);
     fps.send_bytes(mavBuff1, msgLen1);
