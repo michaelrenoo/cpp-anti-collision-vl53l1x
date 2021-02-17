@@ -27,11 +27,11 @@ void app_main(void);
 IscMaster iscm;
 
 MavlinkCom mav;
-FPS fps;
 VL53L1X vl53l0;
 VL53L1X vl53l1;
 VL53L1X vl53l2;
 VL53L1X vl53l3;
+FPS fps;
 BMP280 bme280;
 
 uint8_t printBuff[256];
@@ -74,16 +74,22 @@ static void dist_task() {
     int msgLen3 = 0;
 
     msgLen0 = mav_generate_distance_sensor(
-        mavBuff0, MAV_OUT_MAX_LEN, 1, MAV_SENSOR_ROTATION_NONE,  // 1st sensor - towards USB in Pi
+        mavBuff0, MAV_OUT_MAX_LEN, 1,
+        MAV_SENSOR_ROTATION_NONE,  // 1st sensor - towards USB in Pi
         (vl53l0.getDistance() / 10));
     msgLen1 = mav_generate_distance_sensor(
-        mavBuff1, MAV_OUT_MAX_LEN, 2, MAV_SENSOR_ROTATION_YAW_90,  // 2nd sensor - towards power connector in Pi
+        mavBuff1, MAV_OUT_MAX_LEN, 2,
+        MAV_SENSOR_ROTATION_YAW_90,  // 2nd sensor - towards power connector in
+                                     // Pi
         (vl53l1.getDistance() / 10));
     msgLen2 = mav_generate_distance_sensor(
-        mavBuff2, MAV_OUT_MAX_LEN, 3, MAV_SENSOR_ROTATION_YAW_180,  // 3rd sensor - backwards from USB in Pi
+        mavBuff2, MAV_OUT_MAX_LEN, 3,
+        MAV_SENSOR_ROTATION_YAW_180,  // 3rd sensor - backwards from USB in Pi
         (vl53l2.getDistance() / 10));
     msgLen3 = mav_generate_distance_sensor(
-        mavBuff3, MAV_OUT_MAX_LEN, 4, MAV_SENSOR_ROTATION_YAW_270,  // 4th sensor - backwards from power connector in Pi
+        mavBuff3, MAV_OUT_MAX_LEN, 4,
+        MAV_SENSOR_ROTATION_YAW_270,  // 4th sensor - backwards from power
+                                      // connector in Pi
         (vl53l3.getDistance() / 10));
 
     fps.send_bytes(mavBuff0, msgLen0);
@@ -221,9 +227,6 @@ int main() {
 
   log_set_vprintf(log_handle);
 
-  // init UART 1
-  assign_uart_usage(UART_NUM_2, 115200, UART2_TX_PIN, UART2_RX_PIN);
-
   //********************************
   //* init i2c                     *
   //********************************
@@ -286,6 +289,13 @@ int main() {
         break;
     }
   }
+
+  //********************************
+  //* init FPS                     *
+  //********************************
+
+  // init UART 1
+  assign_uart_usage(UART_NUM_2, 115200, UART2_TX_PIN, UART2_RX_PIN);
 
   // bme280.init(&iscm);
 
