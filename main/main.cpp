@@ -34,6 +34,7 @@ VL53L1X vl53l3;
 FPS fps;
 BMP280 bme280;
 
+uint16_t count = 0;
 uint8_t printBuff[256];
 
 int log_handle(const char *format, va_list arg) {
@@ -148,14 +149,29 @@ static void i2c_vl53l1x_read_task() {
       task_delay_ms(10);
     }
 
-    // TODO: Add counter to count how many times per second the distance is
-    // measured. and log it with another task. -> count is then a global var
     log_i(TAG, "Dist Sensor 1: %d", vl53l0.getDistance());
     log_i(TAG, "Dist Sensor 2: %d", vl53l1.getDistance());
     log_i(TAG, "Dist Sensor 3: %d", vl53l2.getDistance());
     log_i(TAG, "Dist Sensor 4: %d", vl53l3.getDistance());
     log_i(TAG, "---------------------------------------");
-    task_delay_ms(200);
+    count++;
+    task_delay_ms(20);
+  }
+
+  end_task();
+}
+
+#if BUILD_TARGET == TARGET_ESP32
+static void count_task(void *pvParameters) {
+#else
+static void count_task() {
+#endif
+  while (1) {
+    static const char *TAG = "Count Task";
+    task_delay_ms(1000);
+    log_i(TAG, "Counter per second: %d", count);
+    log_i(TAG, "---------------------------------------");
+    count = 0;
   }
 
   end_task();
@@ -311,6 +327,8 @@ int main() {
   start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
   // start dist send task
   start_task(dist_task, "dist_task", 8 * 1024, 1);
+  // start count task
+  start_task(count_task, "count_task", 8 * 1024, 1);
 
   //********************************
   //* complete boot up             *
