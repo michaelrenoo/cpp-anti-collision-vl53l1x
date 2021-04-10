@@ -4,8 +4,10 @@
  * @brief
  * @version 0.1
  * @date 2019-05-17
+ * Modified by Michael Reno (michaelreno19@gmail.com)
+ * in January 2021
  *
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2021
  *
  */
 

@@ -1,5 +1,5 @@
 /*
- * GPSParser.h
+ * FPS.h
  *
  *  Created on: Jan 28, 2018
  *      Author: juri

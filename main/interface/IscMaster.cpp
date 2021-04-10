@@ -4,8 +4,9 @@
  * @brief
  * @version 0.1
  * @date 2019-05-17
- *
- * @copyright Copyright (c) 2019
+ * Modified by Michael Reno (michaelreno19@gmail.com)
+ * in January 2021
+ * @copyright Copyright (c) 2021
  *
  */
 
@@ -112,4 +113,3 @@ int IscMaster::send_bytes(uint16_t address, uint8_t* buff, uint16_t len) {
     log_w(TAG, "send_bytes: could not obtain semaphore");
   return ERROR_FAIL;
 }
-

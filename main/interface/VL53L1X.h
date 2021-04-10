@@ -1,42 +1,9 @@
 /*
-  This is a library written for the VL53L1X
-  SparkFun sells these at its website: www.sparkfun.com
-  Do you like this library? Help support SparkFun. Buy a board!
-  https://www.sparkfun.com/products/14667
-
-  Written by Nathan Seidle @ SparkFun Electronics, April 12th, 2018
-
-  The VL53L1X is the latest Time Of Flight (ToF) sensor to be released. It uses
-  a VCSEL (vertical cavity surface emitting laser) to emit a class 1 IR laser
-  and time the reflection to the target. What does all this mean? You can
-  measure the distance to an object up to 4 meters away with millimeter
-  resolution!
-
-  We’ve found the precision of the sensor to be 1mm but the accuracy is around
-  +/-5mm.
-
-  This library handles the initialization of the VL53L1X and is able to query
-  the sensor for different readings.
-
-  Because ST has chosen not to release a complete datasheet we are forced to
-  reverse engineer the interface from their example code and I2C data stream
-  captures. For ST's reference code see STSW-IMG007
-
-  The device operates as a normal I2C device. There are *many* registers.
-  Reading and writing happens with a 16-bit address. The VL53L1X auto-increments
-  the memory pointer with each read or write.
-
-  Development environment specifics:
-  Arduino IDE 1.8.5
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *      Written by Nathan Seidle @ SparkFun Electronics, April 12th, 2018
+ *      Modified by Juri Bieler and Michael Reno to work with with Raspberry Pi
+ *      4, January 2021
+ *      Email: juribieler@gmail.com, michaelreno19@gmail.com
+ */
 
 #pragma once
 
@@ -50,7 +17,8 @@ class VL53L1X {
  public:
   bool init(IscMaster *iscm);
   void softReset();  // Reset the sensor via software
-  void startMeasurement(uint8_t newAddress,
+  void startMeasurement(
+      uint8_t newAddress,
       uint8_t offset = 0);   // Write a block of bytes to the sensor to
                              // configure it to take a measurement
   bool newDataReady();       // Polls the measurement completion bit
@@ -66,12 +34,13 @@ class VL53L1X {
   uint8_t getAddress() { return deviceAddress; };
 
  private:
-  IscMaster *iscm;  // i2c master
-  uint8_t deviceAddress;
-  static const uint8_t defaultAddress_VL53L1X = 0x29;
-  static constexpr uint8_t I2C_BUFFER_LENGTH = 32;
+  IscMaster *iscm;        // i2c master
+  uint8_t deviceAddress;  // current device address
+  static const uint8_t defaultAddress_VL53L1X =
+      0x29;                                         // default device addresss
+  static constexpr uint8_t I2C_BUFFER_LENGTH = 32;  // default I2C buffer length
 
   // Variables
   uint8_t _i2cport;  // The generic connection to user's chosen I2C hardware
-  uint8_t _distanceMode = 0;
+  uint8_t _distanceMode = 0;  // Mode 0 = Standard
 };

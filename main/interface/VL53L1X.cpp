@@ -1,4 +1,11 @@
-
+/*
+ *      Written by Nathan Seidle @ SparkFun Electronics, April 12th, 2018
+ *      Modified by Simon D. Levy to work with CrossPlatformI2C library, 26 July
+ *      2018
+ *      Modified by Juri Bieler and Michael Reno to work with with Raspberry Pi
+ *      4, January 2021
+ *      Email: juribieler@gmail.com, michaelreno19@gmail.com
+ */
 
 #include "VL53L1X.h"
 
@@ -41,14 +48,12 @@ bool VL53L1X::init(IscMaster *iscm) {
   if (this->deviceAddress == NULL) {
     this->deviceAddress = defaultAddress_VL53L1X;
   }
-  // this->deviceAddress = 0x29;
   this->iscm = iscm;
 
   // Check the device ID
   uint8_t buff[2] = {0, 0};
   iscm->read_register16(deviceAddress, VL53L1_IDENTIFICATION__MODEL_ID, buff,
                         2);
-  // log_i(TAG, "test: %x %x", buff[0], buff[1]);
   uint16_t modelID = buff[0] << 8 | buff[1];
   uint8_t count = 0;
   while (modelID != 0xEACC) {
@@ -96,7 +101,6 @@ bool VL53L1X::init(IscMaster *iscm) {
   iscm->write_register16(deviceAddress, VL53L1_PAD_I2C_HV__EXTSUP_CONFIG,
                          writeBuff, 2);
 
-  // start_task(i2c_vl53l1x_read_task, "vl53l1x", 4 * 1024, 1);
   return true;  // Sensor online!
 }
 
